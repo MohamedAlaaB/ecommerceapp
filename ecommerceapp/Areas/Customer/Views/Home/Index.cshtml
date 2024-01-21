@@ -1,0 +1,277 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor Accessor
+@model ecommerce.Models.Posvm;
+<div class="containerff">
+    <div class="row" >
+        <div class="col-2 ">
+            <ul class="list-group">
+                @if (Model.Products != null)
+                {
+                    @foreach (var item in Model.Categories)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a asp-controller="Home" asp-action="Index" asp-route-categoryid="@item.Id" class="btn btn-outline-primary border">
+                                @item.Name
+                            </a>
+
+                            <span class="badge bg-primary rounded-pill">@item.productscount</span>
+                        </li>
+                    }
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a asp-controller="Home" asp-action="Index" asp-route-categoryid="0"  class="btn btn-outline-primary border">
+                               All
+                            </a>
+
+                           
+                        </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a asp-controller="Home" asp-action="Index" asp-route-categoryid="-1" class="btn btn-outline-primary border">
+                            Out of stock 
+                        </a>
+
+
+                    </li>
+
+                }
+               
+                
+               
+            </ul>
+        </div>
+        <div class="col-6 border-end">
+            <div class="row pb-3">
+            @foreach (var product in Model.Products)
+            {
+                <div class="col-lg-3 col-sm-6">
+                    <div class="row p-2">
+                        <div class="12 p-1">
+                            <div class="card border-0 p-3 shadow  border-top border-5 rounded">
+                                @if (product.ImageUrl != null )
+                                {
+                                    <img src="@product.ImageUrl" class="card-img-top rounded" />
+                                }
+                                else
+                                {
+                                    <img src=https://placehold.co/600x500 class="card-img-top rounded" />
+                                }
+                                    @* <form method="post"> *@
+                                        <input hidden asp-for="@product.Id" />
+                                        <div class="card-body pb-0">
+                                            <div class="pl-1">
+                                                <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@product.Name</p>
+
+                                            </div>
+                                            <div class="pl-1">
+                                                <p class="text-dark text-opacity-75 text-center mb-0">
+                                                    Price:
+                                                    <span>
+                                                        @product.Price.ToString("c")
+                                                    </span>
+                                                </p>
+                                            </div>
+                                            <div>
+                                            @if (product.Qty !=0 )
+                                            {
+                                                <a asp-action="addtoorder" asp-route-productId="@product.Id" asp-route-ProductId="@product.Id" class="btn btn-outline-primary border"> add to cart</a>
+                                            }
+                                            
+                                               
+                                            </div>
+
+                                        </div>
+                               @*  </form> *@
+                                       
+                               
+                                
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+            </div>
+        </div>
+        <div class="col-4">
+            <form method="post" class="row">
+                <input hidden asp-for="@Model.Calcvm.Order.Id" />
+                
+                <div class="card border-0">
+                    <div class="card-body">
+
+                        @* <div class="container mb-5 mt-3">
+
+                            <div class="row d-flex align-items-baseline">
+                                <div class="col-xl-9 ">
+
+                                    <strong>
+                                        Ecommerceapp
+                                    </strong>
+
+                                </div>
+                                <div class="col-xl-9 ">
+                                    <p>Invoice >> <strong>ID: #123-123</strong></p>
+                                </div>
+                                <div class="col-xl-3 float-end">
+                                    <a class="btn btn-light text-capitalize border-0" data-mdb-ripple-color="dark">
+                                        <i class="fas fa-print text-primary"></i> Print
+                                    </a>
+                                    <a class="btn btn-light text-capitalize" data-mdb-ripple-color="dark">
+                                        <i class="far fa-file-pdf text-danger"></i> Export
+                                    </a>
+                                </div>
+                                <hr>
+                            </div> *@
+
+                            <div class="row">
+                                <div class="col-xl-8">
+                                    <ul class="list">
+                                        <li class="list-group-item p-1 ">City, Branch</li>
+                                    <li class="list-group-item  p-2 ">Customer : @(Model.Calcvm.Order.Id!=0?(Model.Calcvm.Order.Customer.Customer_Name):"customer name ") </li>
+                                    <li class="list-group-item  p-1 "><i class="fas fa-phone"></i> number : @(Model.Calcvm.Order.Id!=0?(Model.Calcvm.Order.Customer.Customer_PhoneNumber):"customer phonenumber ")</li>
+                                        <li>
+                                        @if (Model.Calcvm.Order.Id != 0)
+                                        {
+                                            <a class="btn btn-primary " asp-action="UpsertCustomer" asp-controller="Home" asp-route-id="@Model.Calcvm.Order.CustomerId"> add customer </a>
+                                        }
+                                       
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-xl-4">
+                                    Ecommerceapp
+                                    <ul class="list-unstyled">
+                                        <li class="text-muted">
+                                            <i class="fas fa-circle"></i> <span class="fw-bold">ID:</span>#@Model.Calcvm.Order.Id
+                                        </li>
+                                        <li class="text-muted">
+                                            <i class="fas fa-circle"></i> <span class="fw-bold">Creation Date: </span>@Model.Calcvm.Order.creation_date
+                                        </li>
+                                    <li class="text-muted">
+                                        <i class="fas fa-circle"></i> <span class="me-1 fw-bold">Status:</span><span class="badge bg-warning text-black fw-bold">
+                                            <select asp-for="@Model.Calcvm.Order.Order_Status" asp-items="@Model.Calcvm.Order_status">
+                                                <option selected disabled>--select--</option>
+                                            </select>
+
+                                            <span asp-validation-for="@Model.Calcvm.Order.Order_Status" class="text-danger"></span>
+                                        </li>
+                                        <li class="text-muted">
+                                           
+                                            <i class="fas fa-circle"></i> <span class="me-1 fw-bold">PaymentMethod:</span><span class="badge bg-warning text-black fw-bold">
+                                                <select asp-for="@Model.Calcvm.Order.PaymentMethod" asp-items="@Model.Calcvm.Payment_Method">
+                                                <option selected disabled>--select--</option>
+                                                </select>
+                                            <span asp-validation-for="@Model.Calcvm.Order.PaymentMethod" class="text-danger"></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="row my-2 mx-1 justify-content-center">
+                                <table class="table table-striped table-borderless">
+                                    <thead class="table-borderless">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Product</th>
+                                            <th scope="col">Qty</th>
+                                            <th scope="col">Unit Price</th>
+                                            <th scope="col">Total</th>
+                                            <th scope="col">Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @if (Model.Calcvm.Order.OrderDetails !=null)
+                                    {
+                                        var i = 1;
+                                        @foreach (var item in Model.Calcvm.Order.OrderDetails)
+                                        {
+
+                                            
+                                            <tr>
+                                                <th scope="row">@i</th>
+                                                <td>@item.Product.Name</td>
+                                                <td>
+                                                    @if (item.Product.Qty != 0)
+                                                    {
+                                                        <button  asp-action="plus" asp-route-orderdetailid="@item.Id" class="btn btn-outline-primary bg-gradient py-2">
+                                                            <i class="bi bi-plus-square"></i>
+                                                        </button>
+                                                       
+                                                    }else{
+                                                    <button disabled asp-action="plus" asp-route-orderdetailid="@item.Id" class="btn btn-outline-primary bg-gradient py-2">
+                                                        <i class="bi bi-plus-square"></i>
+                                                        </button>
+                                                    }
+                                                    &nbsp;
+                                                    @item.Ordered_qty
+                                                    <a asp-action="minus" asp-route-orderdetailid="@item.Id" class="btn btn-outline-primary bg-gradient py-2">
+                                                        <i class="bi bi-dash-square"></i>
+                                                    </a>&nbsp;
+                                                    </td>
+                                                <td>@item.Product.Price</td>
+                                                <td>@item.order_total_price</td>
+                                                <td>
+                                                    <a asp-action="remove" asp-route-orderdetailid="@item.Id" class="btn btn-danger bg-gradient py-2 ">
+                                                        <i class="bi bi-trash-fill"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            i++;
+                                        }
+                                    }
+                                    
+                                  
+                                       
+                                     
+                                    </tbody>
+
+                                </table>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-8">
+                                    <p class="ms-3">Add additional notes and payment information</p>
+
+                                </div>
+                                <div class="col-xl-3">
+                                    <ul class="list-unstyled">
+                                        <li class="text-muted ms-3"><span class="text-black me-4">SubTotal</span>$1110</li>
+                                        <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Tax(15%)</span>$111</li>
+                                    </ul>
+                                    <p class="text-black float-start">
+                                        <span class="text-black me-3"> Total Amount</span><span style="font-size: 25px;">@Model.Calcvm.Order.Total</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-xl-10">
+                                    <p>Thank you for your purchase</p>
+                                </div>
+                                <div class="col-xl-2">
+                                    @if (Model.Calcvm.Order.Id !=0)
+                                {
+                                    @if (!string.IsNullOrWhiteSpace(Model.Calcvm.Order.Customer.Customer_Name) && !string.IsNullOrWhiteSpace(Model.Calcvm.Order.Customer.Customer_Address) && Model.Calcvm.Order.Customer.Customer_PhoneNumber != 0 )
+                                    {
+                                        <button type="submit" class="btn btn-primary text-capitalize"
+                                                style="background-color:#60bdf3 ;">
+                                            Pay Now
+                                        </button>
+                                    }
+                                }
+                                
+                                    
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+               
+            </form>
+        </div>
+        </div>
+         
+
+    </div>
+              
+ </div>
+ </div>>

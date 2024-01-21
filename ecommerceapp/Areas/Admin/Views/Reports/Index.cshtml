@@ -1,0 +1,141 @@
+﻿@model ecommerce.Models.Report
+
+<div class="card shadow border-0 mt-4">
+
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class=" py-2">Selling Report</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        @* <div class="row pb-3">
+            <div class="col-6">
+            </div>
+            <div class="col-6 text-end">
+
+                <a asp-area="Admin" asp-controller="users" asp-action="Upsert" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> &nbsp; Create New User
+                </a>
+
+            </div>
+        </div> *@
+        <div class="card-body  mb-3 form-control">
+            <form method="post" class=" row pb-3  ">
+                <div class="  mt-5 col-2 ">
+                    <select asp-items="Model.Dates" asp-for="Date" name="Date" style=" padding-top: 10px; width:250px; margin-top: 30px;">
+                        <option selected class="text-center"> select time range</option>
+                    </select>
+                </div>
+               
+                <h3 class="text-center col-1 pt-5  mt-4">Or</h3>
+                <div class=" col-4  mt-3 py-2">
+                    <h5 class="text-center">Pic start and end dates</h5>
+                    <div class="row justify-content-center">
+                        <div @* class="col-lg-3 col-sm-6" *@>
+                            <label for="startDate">Start</label>
+                            <input id="startDate" class="form-control " type="date" name="start" />
+                            <span name="startlabel" id="startDateSelected" class="mt-2 mb-2"></span>
+                        </div>
+                        <div class=@* "col-lg-3 col-sm-6" *@>
+                            <label for="endDate">End</label>
+                            <input id="endDate" class="form-control" type="date" name="end" />
+                            <span name="endlabel" id="endDateSelected" class="mt-2 mb-2"></span>
+                        </div>
+                    </div>
+                </div>
+                <button class=" form-floating col-2 btn btn-outline-primary border mb-5 h-80 border-0 shadow" style="margin-left:15px; margin-top:100px;" type="submit">Search</button>
+            </form>
+        </div>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>
+                       Date
+                    </th>
+                  
+                    <th> Single Order Total </th>
+                    <th>
+                        Sold Products Name
+                    </th>
+                    <th>
+                        Sold Product  Amount 
+                    </th>
+
+                    <th>
+                        Employee
+                    </th>
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+               
+                
+                @foreach (var obj in Model.order)
+                 
+                {
+                    
+                    <tr>
+                        <td>@obj.creation_date</td>
+                      
+                        <td>@obj.Total</td>
+                        <td>
+                            @foreach (var item in obj.OrderDetails)
+                            {
+                                <p> @item.Product.Name</p>
+                                
+                           
+                            }
+                        </td>
+                        <td>
+                            @foreach (var item in obj.OrderDetails)
+                            {
+                                <p>@item.Ordered_qty</p>
+                            }   
+                        </td>
+
+
+                        <td>@obj.employeename</td>
+
+                        @* <td>
+                            <div class="w-75 btn-group" role="group">
+                                <a asp-controller="Users" asp-action="Upsert" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
+                                    <i class="bi bi-pencil-square"></i>&nbsp; Edit
+                                </a>
+                                <a asp-controller="Users" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2">
+                                    <i class="bi bi-trash-fill"></i> &nbsp; Delete
+                                </a>
+                            </div>
+                        </td> *@
+                    </tr>
+                }
+                <tr>
+                    <td>
+                        Total
+                    </td>
+                    <td>
+                        @Model.order.Sum(x=>x.Total)
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </div>
+</div>
+
+<script type="text/javascript">
+    let startDate = document.getElementById('startDate')
+    let endDate = document.getElementById('endDate')
+
+    startDate.addEventListener('change', (e) => {
+        let startDateVal = e.target.value
+        document.getElementById('startDateSelected').innerText = startDateVal
+    })
+
+    endDate.addEventListener('change', (e) => {
+        let endDateVal = e.target.value
+        document.getElementById('endDateSelected').innerText = endDateVal
+    })
+</script>

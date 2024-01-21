@@ -1,0 +1,93 @@
+﻿@model IEnumerable<ecommerce.Models.Product>;
+<div class="card shadow border-0 mt-4">
+
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class=" py-2">Product List</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <div class="row pb-3">
+            <div class="col-6">
+            </div>
+            <div class="col-6 text-end">
+
+                <a asp-area="Admin" asp-controller="Product" asp-action="Upsert" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> &nbsp; Create New Product
+                </a>
+
+            </div>
+        </div>
+
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        Product Name
+                    </th>
+                    <th>
+                        Category
+                    </th>
+                    <th>
+                        staus
+                    </th>
+                    <th>
+                        Stock
+                    </th>
+                     <th>
+                       Price                
+                    </th>
+                    
+                     <th>
+                        Bulk Price
+                         <th>
+                        Supplier
+                    </th>
+                  <th>
+                      Add to stock
+                  </th>
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model)
+                {
+                    <tr >
+                        <form method="post">
+                       <input hidden asp-for="@obj.Id" name="id" >
+                      
+                        <td>@obj.Name</td>
+                        <td>@obj.Category.Name</td>
+                        <td class="@(obj.Qty > 0 ? "bg-white":"bg-danger text-center")">@obj.status</td>
+                        <td class="@(obj.Qty > 0 ? "bg-white":"spinner-grow text-danger text-center")">@obj.Qty</td>
+                        <td>@obj.Price</td>
+                        <td>@obj.BulkPrice</td>
+                        <td>@obj.supplliername</td>
+                        <td><input type="number" name="qty" min="0" />  <button type="submit" class="btn btn-success mx-2" >Update stock </button> </td>
+                       
+                           
+                          
+                      
+                        </form>
+
+                        <td>
+                            <div class="w-75 btn-group" role="group">
+                                <a asp-controller="Product" asp-action="Upsert" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
+                                    <i class="bi bi-pencil-square"></i>&nbsp; Edit
+                                </a>
+                                <a asp-controller="Product" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2">
+                                    <i class="bi bi-trash-fill"></i> &nbsp; Delete
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+

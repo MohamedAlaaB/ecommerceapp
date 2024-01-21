@@ -1,0 +1,81 @@
+﻿@model List<ecommerce.Models.AppUser>
+
+<div class="card shadow border-0 mt-4">
+
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class=" py-2">Users List</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <div class="row pb-3">
+            <div class="col-6">
+            </div>
+            <div class="col-6 text-end">
+
+                <a asp-area="Admin" asp-controller="users" asp-action="Upsert" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> &nbsp; Create New User
+                </a>
+
+            </div>
+        </div>
+        <div class="card-body p-4">
+            <form method="post" class=" row" asp-action="searchByOrderNum">
+                <input class="form-floating py-2 col-4  border-0 shadow" type="search" name="num" placeholder="Search by Invoice number" aria-label="Search">
+               
+
+                <button class=" form-floating py-2 col-2 btn btn-outline-primary border   border-0 shadow" type="submit">Search</button>
+            </form>
+        </div>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        User Name
+                    </th>
+                    <th>
+                        Phone Number
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Role
+                    </th>
+                  
+
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model)
+                {
+                    <tr>
+                        <td>@obj.UserName</td>
+                        <td>@obj.PhoneNumber</td>
+                        <td>@obj.Email</td>
+                        <td>@obj.Role</td>
+                       
+
+
+                        <td>
+                            <div class="w-75 btn-group" role="group">
+                                <a asp-controller="Users" asp-action="Upsert" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
+                                    <i class="bi bi-pencil-square"></i>&nbsp; Edit
+                                </a>
+                                <a asp-controller="Users" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2">
+                                    <i class="bi bi-trash-fill"></i> &nbsp; Delete
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+

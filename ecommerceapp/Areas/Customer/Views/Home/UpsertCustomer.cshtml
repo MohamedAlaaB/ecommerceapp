@@ -1,0 +1,64 @@
+﻿@model ecommerce.Models.Customer ;
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class=" py-2">Edit Customer Data</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+       @*  @if (Model.Customer_PhoneNumber == 0)
+        { *@
+
+        <div class="card-body p-4">
+            <form method="post" class=" row" asp-action="searchByNum">
+                <input class="form-floating py-2 col-4  border-0 shadow" type="search" name="num" placeholder="Search by phone number" aria-label="Search">
+
+                <button class=" form-floating py-2 col-2 btn btn-outline-primary border   border-0 shadow" type="submit">Search</button>
+                    </form>
+            
+            
+                   
+        </div>
+            
+      @*   }
+        else
+        { *@
+            <form method="post" class="row">
+                <div >
+                    @*<div asp-validation-summary="ModelOnly"></div>*@
+                    <div class="form-floating py-2 col-12">
+                        <input asp-for="Customer_Name" class="form-control border-0 shadow" />
+                        <label asp-for="Customer_Name" class="ms-2"></label>
+
+                    </div>
+                    <div class="form-floating py-2 col-12">
+                        <input asp-for="Customer_PhoneNumber" class="form-control border-0 shadow" />
+                        <label asp-for="Customer_PhoneNumber" class="ms-2"></label>
+
+                    </div>
+                    <div class="form-floating py-2 col-12">
+                        <input asp-for="Customer_Address" class="form-control border-0 shadow" />
+                        <label asp-for="Customer_Address" class="ms-2"></label>
+
+                    </div>
+
+                    <div class="row pt-2">
+                        <div class="col-6 col-md-3">
+                            <button type="submit" class="btn btn-primary form-control">Add</button>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary border  form-control">
+                                Back to Home
+                            </a>
+                        </div>
+                    </div>
+
+
+                </div>
+            </form>
+       @*  } *@
+
+    </div>
+</div>

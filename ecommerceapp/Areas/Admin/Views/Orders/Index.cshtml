@@ -1,0 +1,188 @@
+﻿@model ecommerce.Models.SearchVM ;
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class=" py-2">Orders List</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+       
+
+        <div class="card-body p-4">
+            <form method="post" class=" row" asp-action="searchByOrderNum">
+                <input class="form-floating py-2 col-4  border-0 shadow" type="search" name="num" placeholder="Search by Invoice number" aria-label="Search">
+                <div>
+                    <input type="radio" asp-for="SearchingMethod" name="searchmethod" value="phone" />
+                    <label>Phone number</label>
+                </div>
+                <div>
+                    <input type="radio" asp-for="SearchingMethod" name="searchmethod" value="order" />
+                    <label>Invoice number</label>
+                </div>
+
+                <button class=" form-floating py-2 col-2 btn btn-outline-primary border   border-0 shadow" type="submit">Search</button>
+            </form>
+            @if (Model.orders.Count != 0)
+            {
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                Order Id
+                            </th>
+                            <th>
+                                Customer Name
+                            </th>
+                            <th>
+                                PhoneNumber
+                            </th>
+                            <th>
+                                Staus
+                            </th>
+                         
+
+
+                            <th>
+                                Payment Method
+                            <th>
+                                Order Total
+                            </th>
+                            <th>
+                                Order Details
+                            </th>
+
+
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+
+                        @foreach (var obj in Model.orders)
+                        {
+                            @if (obj.Customer != null || obj.OrderDetails != null)
+                            {
+                                <tr>
+                                    <td>@obj.Id</td>
+                                    <td>@obj.Customer.Customer_Name</td>
+                                    <td>@obj.Customer.Customer_PhoneNumber</td>
+                                    <td>@obj.Order_Status</td>
+                                  
+
+                                    <td>@obj.PaymentMethod</td>
+                                    <td>@obj.Total</td>
+                                    <td>
+                                        <table class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        Product
+                                                    </th>
+                                                    <th>
+                                                        Qty
+                                                    </th>
+                                                    <th>
+                                                        Unit Price
+                                                    </th>
+
+                                                    <th>
+                                                        Total Price
+                                                    </th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var detail in obj.OrderDetails)
+                                                {
+                                                    <form method="post" asp-action="DeleteSomeOrderProducts">
+                                                        <input hidden asp-for="@obj.Id" name="orderId">
+                                                        <input hidden asp-for="@detail.Id" name="orderdetailid">
+
+                                                    <tr>
+                                                        <td>@detail.Product.Name</td>
+                                                        <td>
+                                                            <input type="number" max="@(detail.Product.Qty!=0 ?(detail.Product.Qty + detail.Ordered_qty ):detail.Ordered_qty)" min="1" asp-for="@detail.Ordered_qty" name="qty">
+                                                                
+
+                                                        </td>
+                                                        <td>@detail.Product.Price</td>
+                                                        <td>@detail.order_total_price</td>
+
+
+
+                                                        <td>
+                                                            <div class="w-75 btn-group" role="group">
+                                                                <button type="submit" class="btn btn-primary mx-2">
+                                                                    <i class="bi bi-pencil-square"></i>&nbsp; Save Changes
+                                                                </button>
+                                                                <a asp-controller="Orders" asp-action="DeleteOrderDetail" asp-route-orderId="@obj.Id" asp-route-orderdetailid="@detail.Id" class="btn btn-danger mx-2">
+                                                                    <i class="bi bi-trash-fill"></i> &nbsp; Delete
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    </form>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </td>
+
+                                    <td>
+                                        <div class="w-75 btn-group" role="group">
+
+                                            <a asp-controller="Orders" asp-action="DeleteEntireOrder" asp-route-orderId="@obj.Id" class="btn btn-danger mx-2">
+                                                <i class="bi bi-trash-fill"></i> &nbsp; Delete
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }}
+                    </tbody>
+                </table>
+
+
+            }
+
+            @*   }
+            else
+            { *@
+            @*   <form method="post" class="row">
+            <div>
+            @*<div asp-validation-summary="ModelOnly"></div>*@
+            @* <div class="form-floating py-2 col-12">
+            <input asp-for="Customer_Name" class="form-control border-0 shadow" />
+            <label asp-for="Customer_Name" class="ms-2"></label>
+
+            </div>
+            <div class="form-floating py-2 col-12">
+            <input asp-for="Customer_PhoneNumber" class="form-control border-0 shadow" />
+            <label asp-for="Customer_PhoneNumber" class="ms-2"></label>
+
+            </div>
+            <div class="form-floating py-2 col-12">
+            <input asp-for="Customer_Address" class="form-control border-0 shadow" />
+            <label asp-for="Customer_Address" class="ms-2"></label>
+
+            </div>
+
+            <div class="row pt-2">
+            <div class="col-6 col-md-3">
+            <button type="submit" class="btn btn-primary form-control">Add</button>
+            </div>
+            <div class="col-6 col-md-3">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary border  form-control">
+            Back to Home
+            </a>
+            </div>
+            </div>
+
+
+            </div>
+            </form> *@
+            @*  } *@
+
+        </div>
+    </div>
